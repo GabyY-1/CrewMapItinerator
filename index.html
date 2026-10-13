@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b101b">
+<meta name="description" content="Créez vos itinéraires sur la carte de The Crew 2, ajoutez des étapes et suivez votre progression.">
+<title>CrewMap Itinerator — Studio d'itinéraires</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="brand"><div class="brandmark"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 29 18 8l6 12 9-9M8 31h26" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><strong>CrewMap<span>Itinerator</span></strong><small>ROUTE STUDIO • THE CREW 2</small></div></div>
+  <div class="side-section-title">ESPACE DE TRAVAIL</div>
+  <button class="navitem active" id="nav-editor"><span>◈</span> Éditeur d'itinéraire</button>
+  <button class="navitem" id="nav-library"><span>▤</span> Mes itinéraires <span class="navcount" id="routeCount">0</span></button>
+  <div class="side-section-title spaced">ITINÉRAIRE EN COURS</div>
+  <label class="field-label" for="routeTitle">Nom de l'itinéraire</label>
+  <input id="routeTitle" class="field" maxlength="100" placeholder="Ex. Tour de Floride">
+  <label class="field-label" for="routeDescription">Description</label>
+  <textarea id="routeDescription" class="field" rows="3" maxlength="500" placeholder="Le concept de ce trajet…"></textarea>
+  <div class="two-fields"><div><label class="field-label" for="routeCategory">Catégorie</label><select id="routeCategory" class="field"><option>Road trip</option><option>Découverte</option><option>Course libre</option><option>Défi photo</option><option>Exploration</option></select></div><div><label class="field-label" for="routeVisibility">Visibilité</label><select id="routeVisibility" class="field"><option value="private">Privé</option><option value="unlisted">Non répertorié</option><option value="public">Public</option></select></div></div>
+  <div class="side-note">La visibilité est une préférence enregistrée ; aucun serveur public n'est connecté. Partagez votre parcours avec l'export JSON.</div>
+  <div class="side-bottom"><button class="btn primary full" id="newRoute">＋ Nouvel itinéraire</button><div class="save-state" id="saveStatus">● Enregistré localement</div></div>
+</aside>
+<div class="workspace">
+<header class="topbar">
+ <div class="top-left"><button class="iconbutton mobile-menu" id="menuBtn" aria-label="Ouvrir le menu">☰</button><div class="breadcrumb">ESPACE / <b id="breadcrumb">ÉDITEUR</b></div></div>
+ <div class="top-actions"><div class="version">V0.1 · STUDIO</div><button class="btn ghost" id="importJsonBtn">↓ Importer</button><button class="btn ghost" id="exportJsonBtn">↑ Exporter</button><button class="btn primary" id="saveBtn">Enregistrer</button></div>
+</header>
+<main class="main">
+<section id="editorView" class="editor-view">
+ <div class="page-head"><div><p class="eyebrow">PLANIFICATEUR D'ITINÉRAIRES</p><h1>Concevez votre prochaine aventure<span class="accent">.</span></h1><p class="subtitle">Choisissez votre trajet, placez les arrêts et cochez chaque étape sur la route.</p></div><div class="head-buttons"><button id="toggleMode" class="btn ghost">◉ Mode parcours</button><button id="addStepBtn" class="btn primary">＋ Ajouter une étape</button></div></div>
+ <div class="metrics"><div class="metric"><span>ÉTAPES</span><strong id="statSteps">0</strong><small>Points à découvrir</small></div><div class="metric"><span>TERMINÉES</span><strong id="statDone">0</strong><small>Étapes validées</small></div><div class="metric"><span>PROGRESSION</span><strong id="statProgress">0%</strong><div class="progressbar"><div id="progressFill"></div></div></div><div class="metric"><span>CARTE</span><strong class="metric-label" id="statMap">Quadrillage</strong><small>Support du parcours</small></div></div>
+ <div class="studio-layout">
+  <section class="map-panel">
+   <div class="panel-top"><div><h2>Carte de l'itinéraire</h2><p id="mapHint">Cliquez sur la carte pour placer une étape.</p></div><div class="map-actions"><button class="mini-btn" id="uploadMapBtn">▧ Importer une carte</button><button class="mini-btn danger-text" id="clearMapBtn" title="Retirer l'image de carte">Retirer</button></div></div>
+   <div class="map-toolbar"><div class="toolgroup"><button class="tool active" id="toolAdd" title="Placer des étapes">＋ Placer</button><button class="tool" id="toolMove" title="Déplacer la carte">✥ Déplacer</button></div><div class="map-hint-right">Fond de carte : <strong id="mapSource">Grille libre</strong></div></div>
+   <div class="map-viewport" id="mapViewport" aria-label="Carte interactive pour placer les étapes"><div class="map-canvas" id="mapCanvas"><div class="grid-layer" id="gridLayer"></div><img id="mapImage" alt="Carte personnelle importée" draggable="false" hidden><svg id="routeLines" class="route-lines" viewBox="0 0 1000 650" preserveAspectRatio="none" aria-hidden="true"></svg><div id="markers"></div></div><div class="map-empty" id="mapEmpty"><div class="empty-icon">⌖</div><strong>Votre terrain d'aventure</strong><span>Importez votre capture de la carte officielle pour commencer, ou planifiez sur la grille.</span><button class="btn soft" id="emptyUpload">Importer ma carte</button></div><div class="zoomtools"><button id="zoomIn" aria-label="Zoomer">+</button><button id="zoomOut" aria-label="Dézoomer">−</button><button id="zoomReset" aria-label="Réinitialiser le zoom">⌖</button></div><div class="map-credit">CREWMAP • SUPPORT UTILISATEUR · NON OFFICIEL</div></div>
+   <div class="map-footer"><span><span class="legend-dot"></span> Départ <span class="legend-dot end"></span> Arrivée <span class="legend-line"></span> Liaison indicative</span><span id="coordinates">1000 × 650</span></div>
+  </section>
+  <section class="steps-panel"><div class="steps-head"><div><h2>Étapes du parcours</h2><p>Personnalisez chaque arrêt</p></div><span class="pill" id="stepsBadge">0 étapes</span></div><div id="stepsList" class="steps-list"></div><button id="addStepBottom" class="add-bottom">＋ Ajouter une étape</button></section>
+ </div>
+ <p class="disclaimer">ℹ Les segments relient visuellement les étapes à vol d'oiseau : ils ne représentent pas des routes réelles ni une navigation GPS. Utilisez uniquement une image de carte que vous avez le droit d'importer.</p>
+</section>
+<section id="libraryView" hidden><div class="page-head"><div><p class="eyebrow">VOTRE COLLECTION</p><h1>Mes itinéraires<span class="accent">.</span></h1><p class="subtitle">Retrouvez les parcours enregistrés sur cet appareil.</p></div><button class="btn primary" id="newFromLibrary">＋ Créer un itinéraire</button></div><div id="libraryGrid" class="library-grid"></div></section>
+</main></div></div>
+<div class="modal-backdrop" id="stepModal" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="stepModalTitle"><div class="modal-header"><div><p class="eyebrow">POINT DE PASSAGE</p><h2 id="stepModalTitle">Nouvelle étape</h2></div><button class="iconbutton" id="closeModal" aria-label="Fermer">×</button></div><form id="stepForm"><input type="hidden" id="stepId"><label class="field-label" for="stepName">Nom de l'étape *</label><input class="field" id="stepName" maxlength="100" required placeholder="Ex. Entrée de Miami"><label class="field-label" for="stepDetails">Instructions / objectif</label><textarea class="field" id="stepDetails" rows="3" maxlength="600" placeholder="Ex. Prendre une photo à cet endroit…"></textarea><div class="two-fields"><div><label class="field-label" for="stepType">Type</label><select class="field" id="stepType"><option value="stop">Arrêt</option><option value="photo">Photo</option><option value="checkpoint">Checkpoint</option><option value="view">Point de vue</option><option value="finish">Arrivée</option></select></div><div><label class="field-label" for="stepPosition">Position</label><div class="position"><input class="field" id="stepX" type="number" min="0" max="100" step=".1" aria-label="Position horizontale en pourcentage"><input class="field" id="stepY" type="number" min="0" max="100" step=".1" aria-label="Position verticale en pourcentage"></div></div></div><p class="help-text">Position en % de la carte : X horizontal, Y vertical. Vous pouvez aussi cliquer directement sur la carte.</p><label class="field-label" for="stepPhoto">Photo de validation (facultative)</label><input class="field file-field" id="stepPhoto" type="file" accept="image/png,image/jpeg,image/webp"><p class="help-text" id="photoNote">La photo sera réduite pour l'enregistrement local. Elle reste sur cet appareil.</p><div class="modal-actions"><button type="button" class="btn ghost" id="deleteStep">Supprimer l'étape</button><div class="push"></div><button type="button" class="btn ghost" id="cancelModal">Annuler</button><button type="submit" class="btn primary">Enregistrer l'étape</button></div></form></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="mapFile" accept="image/png,image/jpeg,image/webp" hidden><input type="file" id="jsonFile" accept=".json,application/json" hidden>
+<script src="./app.js" defer></script>
+</body></html>
