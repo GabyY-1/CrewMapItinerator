@@ -3,3 +3,6 @@ textarea{font:inherit;display:block;width:100%;min-height:120px;resize:vertical;
 
 /* Keep game map as an interaction surface, never a draggable browser image */
 #stage,#maplayer,#mapimage,#mapimage img,#overlay{-webkit-user-select:none;user-select:none;-webkit-user-drag:none;user-drag:none}#mapimage img{pointer-events:none}#stage{overscroll-behavior:contain}#mapimage{touch-action:none}
+
+/* Lucide icons throughout controls, authentication and navigation */
+button svg.lucide,button .lucide{width:17px;height:17px;vertical-align:middle;flex-shrink:0}#account{display:inline-flex;align-items:center;gap:8px}dialog h2{display:flex;align-items:center;gap:10px;font-size:21px}dialog label{display:block}dialog label>svg{vertical-align:middle;margin-right:5px;width:16px;height:16px}.step>button{display:inline-grid;place-items:center;min-width:30px;min-height:30px}.link{display:inline-flex;align-items:center;gap:5px}.routeentry>button{display:inline-flex;align-items:center;gap:5px}#signup,#close{width:calc(50% - 12px);font-size:12px}#auth .primary.full{margin-top:15px}
