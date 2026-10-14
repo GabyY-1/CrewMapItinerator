@@ -1,0 +1,1 @@
+{"rewrites":[{"source":"/assets/map.jpg","destination":"/map.jpg"},{"source":"/(.*)","destination":"/index.html"}]}
